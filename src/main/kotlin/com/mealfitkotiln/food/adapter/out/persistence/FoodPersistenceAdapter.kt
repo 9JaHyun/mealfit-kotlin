@@ -1,6 +1,6 @@
 package com.mealfitkotiln.food.adapter.out.persistence
 
-import com.mealfitkotiln.findByIdOrThrow
+import com.mealfitkotiln.common.findByIdOrThrow
 import com.mealfitkotiln.food.application.port.out.CommandFoodPort
 import com.mealfitkotiln.food.application.port.out.QueryFoodPort
 import com.mealfitkotiln.food.domain.Food
