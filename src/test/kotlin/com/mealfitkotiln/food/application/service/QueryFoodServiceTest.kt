@@ -1,8 +1,10 @@
-성package com.mealfitkotiln.food.application.service
+package com.mealfitkotiln.food.application.service
 
-import com.mealfitkotiln.food.application.port.`in`.FoodInfoRequestDto
-import com.mealfitkotiln.food.application.port.`in`.FoodSaveRequestDto
+import com.mealfitkotiln.food.application.port.out.CommandFoodPort
+import com.mealfitkotiln.food.application.port.out.QueryFoodPort
+import com.mealfitkotiln.food.domain.Food
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -11,9 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class QueryFoodServiceTest @Autowired constructor(
-    private val commandFoodService: CommandFoodService,
-    private val queryFoodService: QueryFoodService
+    private val queryFoodPort: QueryFoodPort,
+    private val commandFoodPort: CommandFoodPort
 ) {
+
+    @AfterEach
+    fun tearDown() {
+        commandFoodPort.deleteAll()
+    }
+
     @Nested
     @DisplayName("findFoods() 메서드는")
     inner class Testing_findFoods {
@@ -22,13 +30,13 @@ class QueryFoodServiceTest @Autowired constructor(
         @Test
         fun findFoods_success() {
             // given
-            commandFoodService.saveFood(FoodSaveRequestDto("음식1", 100.0, 150.0, 30.0, 10.0, 11.0, "제조사1"))
-            commandFoodService.saveFood(FoodSaveRequestDto("음식2", 110.0, 200.0, 35.0, 15.0, 16.0, "제조사2"))
-            commandFoodService.saveFood(FoodSaveRequestDto("음식3", 120.0, 300.0, 40.0, 20.0, 21.0, "제조사3"))
+            commandFoodPort.saveFood(Food("음식1", 100.0, 150.0, 30.0, 10.0, 11.0, "제조사1"))
+            commandFoodPort.saveFood(Food("음식2", 110.0, 200.0, 35.0, 15.0, 16.0, "제조사2"))
+            commandFoodPort.saveFood(Food("음식3", 120.0, 300.0, 40.0, 20.0, 21.0, "제조사3"))
 
             // when
             val findResult =
-                queryFoodService.getFoodsByName(FoodInfoRequestDto("음식", 10, "id", false, 10))
+                queryFoodPort.getFoodsByName("음식", 10, "id", false, 10)
 
             // then
             assertThat(findResult).hasSize(3)
@@ -48,13 +56,13 @@ class QueryFoodServiceTest @Autowired constructor(
         @Test
         fun findFoods_lastId() {
             // given
-            commandFoodService.saveFood(FoodSaveRequestDto("음식1", 100.0, 150.0, 30.0, 10.0, 11.0, "제조사1"))
-            commandFoodService.saveFood(FoodSaveRequestDto("음식2", 110.0, 200.0, 35.0, 15.0, 16.0, "제조사2"))
-            commandFoodService.saveFood(FoodSaveRequestDto("음식3", 120.0, 300.0, 40.0, 20.0, 21.0, "제조사3"))
+            commandFoodPort.saveFood(Food("음식1", 100.0, 150.0, 30.0, 10.0, 11.0, "제조사1"))
+            commandFoodPort.saveFood(Food("음식2", 110.0, 200.0, 35.0, 15.0, 16.0, "제조사2"))
+            commandFoodPort.saveFood(Food("음식3", 120.0, 300.0, 40.0, 20.0, 21.0, "제조사3"))
 
             // when
             val findResult =
-                queryFoodService.getFoodsByName(FoodInfoRequestDto("음식", 2, "id", false, 10))
+                queryFoodPort.getFoodsByName("음식", 2, "id", false, 10)
 
             // then
             assertThat(findResult).hasSize(2)
