@@ -22,11 +22,15 @@ internal class FoodPersistenceAdapter(
         foodJpaRepository.save(food)
     }
 
+    override fun deleteAll() {
+        foodJpaRepository.deleteAll()
+    }
+
     override fun getFoodsByName(
         foodName: String,
+        size: Int,
         sortKey: String,
         asc: Boolean,
-        size: Int,
         lastId: Long
     ): List<Food> {
         val sort = if (asc) Sort.Direction.ASC else Sort.Direction.DESC

@@ -6,9 +6,9 @@ interface QueryFoodPort {
 
     fun getFoodsByName(
         foodName: String,
+        size: Int,
         sortKey: String,
         asc: Boolean,
-        size: Int,
         lastId: Long
     ): List<Food>
 

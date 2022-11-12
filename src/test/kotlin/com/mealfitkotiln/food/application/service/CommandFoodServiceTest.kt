@@ -1,7 +1,10 @@
 package com.mealfitkotiln.food.application.service
 
-import com.mealfitkotiln.food.application.port.`in`.FoodSaveRequestDto
+import com.mealfitkotiln.food.application.port.out.CommandFoodPort
+import com.mealfitkotiln.food.application.port.out.QueryFoodPort
+import com.mealfitkotiln.food.domain.Food
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -10,9 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class CommandFoodServiceTest @Autowired constructor(
-    private val commandFoodService: CommandFoodService,
-    private val queryFoodService: QueryFoodService
+    private val commandFoodPort: CommandFoodPort,
+    private val queryFoodPort: QueryFoodPort
 ) {
+
+    @AfterEach
+    fun tearDown() {
+        commandFoodPort.deleteAll()
+    }
 
     @Nested
     @DisplayName("saveFood() 메서드는")
@@ -22,15 +30,15 @@ class CommandFoodServiceTest @Autowired constructor(
         @Test
         fun saveFood_success() {
             // given
-            val requestDto = FoodSaveRequestDto("사과", 100.0,
+            val food = Food("사과", 100.0,
                 80.0, 15.0, 1.0, 1.0, "전국")
 
             // when
-            commandFoodService.saveFood(requestDto)
+            commandFoodPort.saveFood(food)
 
             // then
-            val findResult = queryFoodService.getFoodById(1L)
-            assertThat(findResult.foodId).isEqualTo(1)
+            val findResult = queryFoodPort.getFoodById(1L)
+            assertThat(findResult.id).isEqualTo(1)
             assertThat(findResult.foodName).isEqualTo("사과")
             assertThat(findResult.oneServing).isEqualTo(100.0)
             assertThat(findResult.kcal).isEqualTo(80.0)

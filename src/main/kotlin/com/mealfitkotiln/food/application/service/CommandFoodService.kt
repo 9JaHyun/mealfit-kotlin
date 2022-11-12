@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class CommandFoodService(
+internal class CommandFoodService(
     private val queryFoodPort: QueryFoodPort,
     private val commandFoodPort: CommandFoodPort
 ) : CommandFoodUseCase{
@@ -22,5 +22,9 @@ class CommandFoodService(
 
     override fun updateFood(foodUpdateRequestDto: FoodUpdateRequestDto) {
         TODO("Not yet implemented")
+    }
+
+    fun deleteAll() {
+        commandFoodPort.deleteAll()
     }
 }
