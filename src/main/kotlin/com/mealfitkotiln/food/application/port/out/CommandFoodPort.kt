@@ -7,4 +7,6 @@ interface CommandFoodPort {
     fun saveFood(food: Food)
 
     fun updateFood(food: Food)
+
+    fun deleteAll()
 }
