@@ -2,6 +2,7 @@ package com.mealfitkotiln.food.adapter.`in`.web
 
 import com.mealfitkotiln.food.application.FoodDtoAssembler
 import com.mealfitkotiln.food.application.port.`in`.CommandFoodUseCase
+import com.mealfitkotiln.food.application.port.`in`.FoodInfoResponse
 import com.mealfitkotiln.food.application.port.`in`.QueryFoodUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,16 +29,16 @@ internal class FoodController(
     }
 
     @GetMapping("/v1")
-    fun getFood(@RequestParam(name = "foodName") foodName: String,
+    fun getFoods(@RequestParam(name = "foodName") foodName: String,
     @RequestParam(defaultValue = "" + Long.MAX_VALUE) lastId: Long,
                 @RequestParam(defaultValue = "id") sortKey: String,
                 @RequestParam(defaultValue = "false") isAsc:Boolean,
-                @RequestParam(defaultValue = DEFAULT_PAGE_SIZE.toString()) pageSize: Int): ResponseEntity<String> {
+                @RequestParam(defaultValue = DEFAULT_PAGE_SIZE.toString()) pageSize: Int): ResponseEntity<List<FoodInfoResponse>> {
         val requestDto = FoodDtoAssembler.foodInfoRequestDto(foodName, pageSize, sortKey, isAsc, lastId)
-        queryFoodUseCase.getFoodsByName(requestDto)
+        val foods = queryFoodUseCase.getFoodsByName(requestDto)
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body("생성 완료")
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(foods)
     }
 
 }
