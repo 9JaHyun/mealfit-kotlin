@@ -7,7 +7,7 @@ import com.mealfitkotiln.food.application.port.out.QueryFoodPort
 import org.springframework.stereotype.Service
 
 @Service
-internal class QueryFoodService(
+class QueryFoodService(
     private val queryFoodPort: QueryFoodPort
 ) : QueryFoodUseCase {
 

@@ -1,8 +1,6 @@
 package com.mealfitkotiln.food.application.service
 
-import com.mealfitkotiln.food.application.port.out.CommandFoodPort
-import com.mealfitkotiln.food.application.port.out.QueryFoodPort
-import com.mealfitkotiln.food.domain.Food
+import com.mealfitkotiln.food.application.port.`in`.FoodSaveRequestDto
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
@@ -13,13 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class CommandFoodServiceTest @Autowired constructor(
-    private val commandFoodPort: CommandFoodPort,
-    private val queryFoodPort: QueryFoodPort
+    private val commandFoodService: CommandFoodService,
+    private val queryFoodService: QueryFoodService,
 ) {
 
     @AfterEach
     fun tearDown() {
-        commandFoodPort.deleteAll()
+        commandFoodService.deleteAll()
     }
 
     @Nested
@@ -29,16 +27,18 @@ class CommandFoodServiceTest @Autowired constructor(
         @DisplayName("FoodSaveRequestDto가 완전히 입력되면 성공")
         @Test
         fun saveFood_success() {
-            // given
-            val food = Food("사과", 100.0,
-                80.0, 15.0, 1.0, 1.0, "전국")
+
+            val requestDto = FoodSaveRequestDto(
+                "사과", 100.0,
+                80.0, 15.0, 1.0, 1.0, "전국"
+            )
 
             // when
-            commandFoodPort.saveFood(food)
+            commandFoodService.saveFood(requestDto)
 
             // then
-            val findResult = queryFoodPort.getFoodById(1L)
-            assertThat(findResult.id).isEqualTo(1)
+            val findResult = queryFoodService.getFoodById(1L)
+            assertThat(findResult.foodId).isEqualTo(1)
             assertThat(findResult.foodName).isEqualTo("사과")
             assertThat(findResult.oneServing).isEqualTo(100.0)
             assertThat(findResult.kcal).isEqualTo(80.0)
@@ -48,6 +48,4 @@ class CommandFoodServiceTest @Autowired constructor(
             assertThat(findResult.madeBy).isEqualTo("전국")
         }
     }
-
-
 }
